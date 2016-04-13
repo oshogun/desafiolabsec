@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<ui:insert name="page">
+	<f:view contentType="text/html">
+		<script type="text/javascript" src="resources/js/removeaccents.js" />
+		<h:head>
+			<f:facet name="first">
+				<meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+				<meta content='text/html; charset=UTF-8' http-equiv="Content-Type" />
+				<title><ui:insert name="title"></ui:insert></title>
+			</f:facet>
+
+		</h:head>
+
+		<h:body styleClass="layoutBody">
+			<h:form>
+				<h:outputLabel value="User:" />
+				<h:inputText value="#{login.user}" />
+				<h:outputLabel value="Password:" />
+				<h:inputSecret type="password" value="#{login.password}" />
+				
+				<h:commandButton value="Login" action="#{login.login}" />
+				<h:commandButton value="Register" action="#{login.register}" />
+			</h:form>
+			<h:outputLabel value="#{login.message}" />
+		</h:body>
+	</f:view>
+</ui:insert>
+</html>
