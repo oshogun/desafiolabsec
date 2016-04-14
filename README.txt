@@ -38,7 +38,7 @@ dados.
 
 Você precisa:
 
-[ ] Adicionar persistência aos usuários cadastrados. Pode ser um arquivo de
+[X] Adicionar persistência aos usuários cadastrados. Pode ser um arquivo de
 texto com um usuário por linha, uma base SQLite, um serviço Postgres completo,
 ou o que você preferir.
 
