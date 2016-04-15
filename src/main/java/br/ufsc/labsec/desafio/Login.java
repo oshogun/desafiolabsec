@@ -1,32 +1,26 @@
 package br.ufsc.labsec.desafio;
 
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 import java.security.Security;
-import java.security.spec.KeySpec;
+
 
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.bouncycastle.crypto.generators.PKCS5S2ParametersGenerator;
-import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Base64;
 
-import javax.crypto.Cipher;
+
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.SecretKeySpec;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
@@ -51,6 +45,9 @@ public class Login {
 	private static final int saltLen = 32;
 	private static final int desiredKeyLen = 256;
 	
+	/**
+	 *  Default constructor. Loads/initializes the password database
+	 */
 	public Login() {
 		// Adds Bouncy Castle as a provider for security algorithms
 		Security.addProvider(new BouncyCastleProvider()); 
@@ -77,6 +74,12 @@ public class Login {
 		
 	}
 	
+	/**
+	 * 
+	 * @param password
+	 * @return A salted hash of the password, in the string format "salt$hash"
+	 * @throws Exception
+	 */
 	public String getSaltedHash(String password) throws Exception {
 		byte[] salt = SecureRandom.getInstance("SHA1PRNG").generateSeed(saltLen);
 		
@@ -84,6 +87,13 @@ public class Login {
 		
 	}
 	
+	/**
+	 * 
+	 * @param password
+	 * @param salt
+	 * @return a hash of the given password, using the given salt
+	 * @throws Exception
+	 */
 	public String hash(String password, byte[] salt) throws Exception {
 		SecretKeyFactory f = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1", "BC");
 		SecretKey key = f.generateSecret(new PBEKeySpec(
@@ -91,6 +101,13 @@ public class Login {
 		return Base64.toBase64String(key.getEncoded());
 	}
 	
+	/**
+	 * 
+	 * @param password
+	 * @param storedPassword
+	 * @return true if given password matches with the stored one.
+	 * @throws Exception
+	 */
 	public boolean check(String password, String storedPassword) throws Exception {
 		String[] saltAndPass = storedPassword.split("\\$");
 		if (saltAndPass.length != 2) {
@@ -160,14 +177,23 @@ public class Login {
 		try {
 			String newSaltedHash = getSaltedHash(password);
 			users.put(user, newSaltedHash);
+			FileWriter fw = new FileWriter("passwords.json");
+			fw.write(users.toJSONString());
 			message = "User registered!";	
+			fw.close();
+			// message = getAbsolutePathOfDBFile(); // just for test
 		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	
+	// just for testing purposes
+	public String getAbsolutePathOfDBFile() {
+		File f = new File("passwords.json");
+		
+		return f.getAbsolutePath(); 
+	}
 	
 	
 	

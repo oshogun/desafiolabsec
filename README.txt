@@ -42,7 +42,7 @@ Você precisa:
 texto com um usuário por linha, uma base SQLite, um serviço Postgres completo,
 ou o que você preferir.
 
-[ ] Armazenar a senha de forma segura. Senhas em texto claro são um risco caso
+[X] Armazenar a senha de forma segura. Senhas em texto claro são um risco caso
 a base de dados seja comprometida. Você precisa armazenar essas senhas de forma
 segura. Tente encontrar a forma mais correta de fazer isso (dica: os problemas
 são sutis e existem vários recursos sobre isso online).
@@ -51,7 +51,7 @@ são sutis e existem vários recursos sobre isso online).
 3. Objetivos secundários
 ------------------------
 
-[ ] Use um sistema de controle de versão, como Git (preferível), Mercurial ou
+[X] Use um sistema de controle de versão, como Git (preferível), Mercurial ou
 SVN. Não esqueça de enviar o histórico (.git/.svn).
 
 [ ] Adicione testes (já existe um esqueleto se quiser), tanto dos casos felizes
