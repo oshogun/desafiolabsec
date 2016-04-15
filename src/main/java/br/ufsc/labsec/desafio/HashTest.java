@@ -9,6 +9,10 @@ public class HashTest {
 		
 		try {
 			System.out.println(loginManager.getSaltedHash(loginManager.getPassword()));
+			System.out.println(loginManager.check(
+					"12345", loginManager.getSaltedHash(loginManager.getPassword())));
+			System.out.println(loginManager.check(
+					"12355", loginManager.getSaltedHash(loginManager.getPassword())));
 		
 		} catch (Exception e) {
 			e.printStackTrace();

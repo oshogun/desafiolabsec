@@ -1,8 +1,10 @@
 package br.ufsc.labsec.desafio;
 
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -13,6 +15,7 @@ import java.security.spec.KeySpec;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.bouncycastle.crypto.generators.PKCS5S2ParametersGenerator;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -49,18 +52,32 @@ public class Login {
 	private static final int desiredKeyLen = 256;
 	
 	public Login() {
-		Security.addProvider(new BouncyCastleProvider());
+		// Adds Bouncy Castle as a provider for security algorithms
+		Security.addProvider(new BouncyCastleProvider()); 
 		JSONParser parser = new JSONParser();
 		
+		// Parses the passwords file, if exists, or creates a new one
 		try (FileReader fr = new FileReader("passwords.json")) {
 			users = (JSONObject) parser.parse(fr);
-		} catch (Exception e) {			
+		} catch (FileNotFoundException e) {			
+			try {
+				FileWriter fw = new FileWriter("passwords.json");
+				users = new JSONObject();
+				fw.write(users.toJSONString());
+				fw.close();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 		
 	}
 	
-	public String getSaltedHash(String password) throws Exception{
+	public String getSaltedHash(String password) throws Exception {
 		byte[] salt = SecureRandom.getInstance("SHA1PRNG").generateSeed(saltLen);
 		
 		return Base64.toBase64String(salt)+"$"+hash(password,salt);
@@ -72,6 +89,16 @@ public class Login {
 		SecretKey key = f.generateSecret(new PBEKeySpec(
 				password.toCharArray(), salt, iterations, desiredKeyLen));
 		return Base64.toBase64String(key.getEncoded());
+	}
+	
+	public boolean check(String password, String storedPassword) throws Exception {
+		String[] saltAndPass = storedPassword.split("\\$");
+		if (saltAndPass.length != 2) {
+			throw new IllegalStateException("Stored password should have the form salt$hash");
+		}
+		String tested = hash(password, Base64.decode(saltAndPass[0]));
+		return tested.equals(saltAndPass[1]);
+	
 	}
 	/**
 	 * @return the current user name
@@ -113,12 +140,16 @@ public class Login {
 	
 	
 	public void login() {
-		if (!users.containsKey(user)) {
-			message = "No such user.";
-		} else if (users.get(user).equals(password)) {
-			message = "Login ok.";			
-		} else {
-			message = "Login fail.";			
+		try {
+			if (!users.containsKey(user)) {
+				message = "No such user.";
+			} else if (check(password,users.get(user).toString())) {
+				message = "Login ok.";			
+			} else {
+				message = "Login fail.";			
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -126,10 +157,11 @@ public class Login {
 	 * Registers the current user and password.
 	 */
 	public void register() {
-		users.put(user, password);
-		message = "User registered!";	
-		try (FileWriter fw = new FileWriter("passwords.json")) {
-			fw.write(users.toJSONString());
+		try {
+			String newSaltedHash = getSaltedHash(password);
+			users.put(user, newSaltedHash);
+			message = "User registered!";	
+		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
