@@ -57,11 +57,11 @@ SVN. Não esqueça de enviar o histórico (.git/.svn).
 [ ] Adicione testes (já existe um esqueleto se quiser), tanto dos casos felizes
 quando das exceções.
 
-[ ] Comentários em partes complicadas.
+[X] Comentários em partes complicadas.
 
-[ ] Documentação nos métodos e classes públicos.
+[X] Documentação nos métodos e classes públicos.
 
-[ ] Organização do código, práticas de clean code.
+[X] Organização do código, práticas de clean code.
 
 
 4. Envio
