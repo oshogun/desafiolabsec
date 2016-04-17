@@ -54,7 +54,7 @@ são sutis e existem vários recursos sobre isso online).
 [X] Use um sistema de controle de versão, como Git (preferível), Mercurial ou
 SVN. Não esqueça de enviar o histórico (.git/.svn).
 
-[ ] Adicione testes (já existe um esqueleto se quiser), tanto dos casos felizes
+[X] Adicione testes (já existe um esqueleto se quiser), tanto dos casos felizes
 quando das exceções.
 
 [X] Comentários em partes complicadas.
@@ -71,8 +71,8 @@ Envie o projeto completo para marinacoelho16@gmail.com até o dia 2016-04-27,
 juntamente com um relatório curto (não precisa ter mais de uma página)
 contendo:
 
-[ ] Breve descrição do que foi implementado.
+[X] Breve descrição do que foi implementado.
 
-[ ] Escolhas feitas e suas justificativas (base de dados, algoritmos, etc).
+[X] Escolhas feitas e suas justificativas (base de dados, algoritmos, etc).
 
-[ ] Problemas encontrados e como foram superados.
+[X] Problemas encontrados e como foram superados.
